@@ -7,7 +7,6 @@ const webpack = require('webpack')
 //webpack設定ファイルの読み込み
 const webpackConfig = require('./webpack.config')
 
-
 const browser_sync = (done) => {
     browserSync({
         server: {
@@ -31,7 +30,7 @@ const bs_reload = (done) => {
 }
 
 const watch = (done) => {
-    gulp.watch(['./src/*.js', './src/js/*.js'], gulp.series(gulp.parallel(bundle, bs_reload)))
+    gulp.watch(['./src/*.js', './src/js/*.js', './dist/*.html'], gulp.series(gulp.parallel(bundle, bs_reload)))
     done()
 }
 
