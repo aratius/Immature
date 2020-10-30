@@ -10,14 +10,12 @@ export default class App extends PIXI.Application {
 
         this.backgroundColor = 0x000000
 
-        this.main = new Main()
-        this.stage.addChild(this.main)
-
         this.resizeTimer;
     }
 
     onSetup() {
-        console.log('setup');
+        this.main = new Main()
+        this.stage.addChild(this.main)
     }
 
     onUpdate() {
@@ -29,8 +27,15 @@ export default class App extends PIXI.Application {
     }
 
     onResize() {
-        this.view.width = this.width = this.screen.width = window.innerWidth
-        this.view.height = this.height = this.screen.height = window.innerHeight
+        if (this.resizeTimer) clearTimeout(this.resizeTimer)
+        this.resizeTimer = setTimeout(function () {
+            //fix renderer size
+            this.view.width = this.width = this.screen.width = window.innerWidth
+            this.view.height = this.height = this.screen.height = window.innerHeight
+
+            //call main resize
+            this.main.onResize()
+        }.bind(this), 200)
     }
 
 }
