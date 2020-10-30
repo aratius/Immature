@@ -25,5 +25,4 @@ export default class Main extends PIXI.Container {
         this.mouseY = e.offsetY
     }
 
-
 }
