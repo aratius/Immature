@@ -23,4 +23,3 @@ function animate() {
 animate()
 
 console.log('hello arata');
-alert('hi mr. arata');
