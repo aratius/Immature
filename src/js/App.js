@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import Main from './Main'
+import Sample from './sample'
 
 export default class App extends PIXI.Application {
 
@@ -14,16 +14,17 @@ export default class App extends PIXI.Application {
     }
 
     onSetup() {
-        this.main = new Main()
-        this.stage.addChild(this.main)
+        this.sample = new Sample()
+        this.sample.onSetup()
+        this.stage.addChild(this.sample)
     }
 
     onUpdate() {
-        this.main.onUpdate()
+        this.sample.onUpdate()
     }
 
     mousemove(e) {
-        this.main.mousemove(e)
+        this.sample.mousemove(e)
     }
 
     onResize() {
@@ -34,7 +35,7 @@ export default class App extends PIXI.Application {
             this.view.height = this.height = this.screen.height = window.innerHeight
 
             //call main resize
-            this.main.onResize()
+            this.sample.onResize(window.innerWidth, window.innerHeight)
         }.bind(this), 200)
     }
 

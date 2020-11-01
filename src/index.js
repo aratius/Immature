@@ -1,6 +1,4 @@
 // entry point
-import * as PIXI from 'pixi.js'
-
 import App from './js/App'
 
 const body = document.querySelector('#app')

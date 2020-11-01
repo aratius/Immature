@@ -1,28 +1,40 @@
 import * as PIXI from 'pixi.js'
+import Vector2 from './utils/vector2'
 
 export default class Main extends PIXI.Container {
 
     constructor() {
         super()
 
-        this.texture = new PIXI.Texture.from('./assets/img/polygon.png')
-        this.sprite = new PIXI.Sprite(this.texture)
-        this.sprite.width = this.sprite.height = 100
-        this.sprite.anchor.set(0.5)
-        this.addChild(this.sprite)
+        this.sw = window.innerWidth
+        this.sh = window.innerHeight
 
-        this.mouseX
-        this.mouseY
+        this.mousePosition = new Vector2(0, 0)
+
+        this.transparent = new PIXI.Sprite()
+        this.transparent.alpha = 0
+        this.width = this.sw
+        this.height = this.sh
+        this.x = 0
+        this.y = 0
+    }
+
+    onSetup() {
+
     }
 
     onUpdate() {
-        this.sprite.position.x = this.mouseX
-        this.sprite.position.y = this.mouseY
+    }
+
+    onResize(sw, sh) {
+        this.sw = sw
+        this.sh = sh
+        console.log(this.sw);
     }
 
     mousemove(e) {
-        this.mouseX = e.offsetX
-        this.mouseY = e.offsetY
+        this.mousePosition.x = e.offsetX
+        this.mousePosition.y = e.offsetY
     }
 
 }
