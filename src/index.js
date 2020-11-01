@@ -6,17 +6,17 @@ const app = new App()
 body.appendChild(app.view)
 
 window.addEventListener('mousemove', function (e) {
-    app.mousemove(e)
+    app._mousemove(e)
 })
 window.addEventListener('resize', function () {
-    app.onResize()
+    app._resize()
 })
-app.onSetup()
-app.onResize()
+app._setup()
+app._resize()
 
 function animate() {
     requestAnimationFrame(animate)
-    app.onUpdate()
+    app._update()
 }
 animate()
 

@@ -13,21 +13,21 @@ export default class App extends PIXI.Application {
         this.resizeTimer;
     }
 
-    onSetup() {
+    _setup() {
         this.sample = new Sample()
-        this.sample.onSetup()
+        this.sample.setup()
         this.stage.addChild(this.sample)
     }
 
-    onUpdate() {
-        this.sample.onUpdate()
+    _update() {
+        this.sample.update()
     }
 
-    mousemove(e) {
+    _mousemove(e) {
         this.sample.mousemove(e)
     }
 
-    onResize() {
+    _resize() {
         if (this.resizeTimer) clearTimeout(this.resizeTimer)
         this.resizeTimer = setTimeout(function () {
             //fix renderer size
@@ -35,7 +35,7 @@ export default class App extends PIXI.Application {
             this.view.height = this.height = this.screen.height = window.innerHeight
 
             //call main resize
-            this.sample.onResize(window.innerWidth, window.innerHeight)
+            this.sample.Resize(window.innerWidth, window.innerHeight)
         }.bind(this), 200)
     }
 
