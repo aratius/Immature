@@ -30,7 +30,7 @@ const bs_reload = (done) => {
 }
 
 const watch = (done) => {
-    gulp.watch(['./src/*.js', './src/js/*.js', './dist/*.html'], gulp.series(bundle, bs_reload))
+    gulp.watch(['./src/*.js', './src/js/*.js', './src/js/utils/*.js', './dist/*.html'], gulp.series(bundle, bs_reload))
     done()
 }
 

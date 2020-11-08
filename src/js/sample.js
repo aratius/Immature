@@ -1,6 +1,8 @@
 import * as PIXI from 'pixi.js'
-import Main from './Main'
+import Main from './main'
 import Vector2 from './utils/vector2'
+import AnimationDot from './utils/animationDot'
+import Color from './utils/color'
 
 export default class Sapmple extends Main {
 
@@ -15,8 +17,8 @@ export default class Sapmple extends Main {
         this.addChild(this.sprite)
 
         //grid間隔
-        this.grid_space_x = 50
-        this.grid_space_y = 50
+        this.grid_space_x = 30
+        this.grid_space_y = 30
         this.grid_size = 15
 
         this.grids = []
@@ -24,27 +26,34 @@ export default class Sapmple extends Main {
 
         this.mouseOffset = new Vector2(0, 0)
 
+        this.count = 0
     }
 
     onSetup() {
+        window.addEventListener('click', function () {
+            for (let i in this.grids) {
+                let dist = Math.sqrt(Math.pow(this.grids[i].x - this.sw / 2, 2) + Math.pow(this.grids[i].y - this.sh / 2, 2))
+                // let dist = Math.sqrt(Math.pow(this.mousePosition.x - this.grids[i].x / 2, 2) + Math.pow(this.mousePosition.y - this.grids[i].y / 2, 2))
+                let delay = dist / 1000
+                let duration = 1
+                this.grids[i].goHome(duration, delay)
+            }
+        }.bind(this))
     }
 
     onUpdate() {
         this.sprite.position = this.mousePosition
-
-        this.mouseOffset.x += this.mouseMoved.x
-        this.mouseOffset.y += this.mouseMoved.y
-        // if (Math.abs(this.mouseMoved.x) > 5 || Math.abs(this.mouseMoved.y) > 5) {
         for (let i in this.grids) {
-            let dist = Math.sqrt(Math.pow(this.mousePosition.x - this.grids[i].position.x, 2) + Math.pow(this.mousePosition.y - this.grids[i].position.y, 2))
-            let range = 300 - dist > 0 ? (300 - dist) / 300 : 0
-
-            this.grids[i].position.x = this.grids_position[i].x + this.mouseOffset.x * range
-            this.grids[i].position.y = this.grids_position[i].y + this.mouseOffset.y * range
+            this.grids[i].onUpdate()
+            if (this.grids[i].isGoHome) {
+                this.count++
+                this.grids[i].isGoHome = false
+            }
         }
-        // }
-        this.mouseOffset.x *= 0.95
-        this.mouseOffset.y *= 0.95
+        if (this.count == this.grids.length) {
+            this.count = 0
+            for (let i in this.grids) this.grids[i].slide()
+        }
     }
 
     onResize() {
@@ -66,13 +75,13 @@ export default class Sapmple extends Main {
                 const x = i * this.grid_space_x
                 const y = j * this.grid_space_y
 
-                const grid = new PIXI.Sprite(texture)
-                grid.position = new Vector2(x, y)
-                grid.width = grid.height = this.grid_size
-                grid.anchor.set(0.5)
+                let position = new Vector2(x, y)
+                let size = this.grid_size
+                let tint = Color.clearBlue
+                const grid = new AnimationDot(texture, position, size, tint)
                 this.addChild(grid)
                 this.grids.push(grid)
-                this.grids_position.push(new Vector2(grid.position.x, grid.position.y))
+                grid.onSetup()
             }
         }
     }

@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import Sample from './sample'
+import Shooting from './shooting'
 
 export default class App extends PIXI.Application {
 
@@ -8,23 +9,23 @@ export default class App extends PIXI.Application {
 
         this.resolution = window.devicePixelRatio
 
-        this.backgroundColor = 0x000000
+        this.renderer.backgroundColor = 0xffffff
 
         this.resizeTimer;
     }
 
     _setup() {
-        this.sample = new Sample()
-        this.sample.setup()
-        this.stage.addChild(this.sample)
+        this.game = new Shooting()
+        this.game.setup()
+        this.stage.addChild(this.game)
     }
 
     _update() {
-        this.sample.update()
+        this.game.update()
     }
 
     _mousemove(e) {
-        this.sample.mousemove(e)
+        this.game.mousemove(e)
     }
 
     _resize() {
@@ -35,7 +36,7 @@ export default class App extends PIXI.Application {
             this.view.height = this.height = this.screen.height = window.innerHeight
 
             //call main resize
-            this.sample.Resize(window.innerWidth, window.innerHeight)
+            this.game.Resize(window.innerWidth, window.innerHeight)
         }.bind(this), 200)
     }
 

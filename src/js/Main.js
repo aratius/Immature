@@ -14,6 +14,8 @@ export default class Main extends PIXI.Container {
         this.mouseMoved = new Vector2(0, 0)
 
         this.transparent = new PIXI.Sprite()
+        this.transparent.width = this.sw
+        this.transparent.height = this.sh
         this.transparent.alpha = 0
         this.width = this.sw
         this.height = this.sh
