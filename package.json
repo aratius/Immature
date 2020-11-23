@@ -12,13 +12,15 @@
   "license": "ISC",
   "devDependencies": {
     "browser-sync": "^2.26.13",
+    "glsl-shader-loader": "^0.1.6",
     "gulp": "^4.0.2",
-    "webpack": "^5.3.0",
+    "webpack": "^5.5.1",
     "webpack-cli": "^4.1.0",
     "webpack-dev-server": "^3.8.0",
     "webpack-stream": "^6.1.0"
   },
   "dependencies": {
+    "@pixi/filter-ascii": "^3.1.1",
     "gsap": "^3.5.1",
     "gulp-connect": "^5.7.0",
     "pixi.js": "^5.3.3",
