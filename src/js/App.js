@@ -10,7 +10,7 @@ export default class App extends PIXI.Application {
 
     this.resolution = window.devicePixelRatio;
 
-    this.renderer.backgroundColor = 0xffffff;
+    this.renderer.backgroundColor = 0xeaeaea;
 
     this.resizeTimer;
   }

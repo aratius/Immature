@@ -1,3 +1,4 @@
+let gsap = require("gsap").gsap;
 import * as PIXI from "pixi.js";
 import { AsciiFilter } from "@pixi/filter-ascii";
 import SampleFilter from "./filter/sampleFilter";
@@ -18,6 +19,12 @@ export default class DeadOrAlive extends Main {
     this.dots = [];
     this.dotSpace = 30;
     this.dotSize = 10;
+
+    this.isSpecialAnimation = false;
+    this.isSpecialAnimationTimer;
+
+    this.randomAmountTimer;
+    this.randomAmount = 1;
   }
 
   imgInit() {
@@ -42,8 +49,12 @@ export default class DeadOrAlive extends Main {
   }
 
   onSetup() {
-    // this.filters = [new AsciiFilter()];
-    this.filters = [new SampleFilter()];
+    window.addEventListener(
+      "click",
+      function () {
+        this.onClick();
+      }.bind(this)
+    );
   }
 
   dotInit() {
@@ -67,8 +78,8 @@ export default class DeadOrAlive extends Main {
         let dot = new AnimationDot(
           texture,
           new Vector2(x, y),
-          this.dotSize,
-          0xff0000
+          this.dotSize * (dist / (this.sw / 2) + 1),
+          0x871e00
         );
         dot.radius = r;
         dot.dist = dist;
@@ -82,9 +93,31 @@ export default class DeadOrAlive extends Main {
   }
 
   onUpdate() {
-    for (let i in this.dots) {
-      this.dots[i].rotation(this.sw, this.sh);
+    if (!this.isSpecialAnimation) {
+      for (let i in this.dots) {
+        this.dots[i].rotation(
+          this.sw,
+          this.sh,
+          this.mouseMoved.x,
+          this.randomAmount
+        );
+      }
     }
+  }
+
+  onClick() {
+    if (this.randomAmountTimer) this.randomAmountTimer.kill();
+    this.randomAmountTimer = gsap.timeline();
+    this.randomAmountTimer.to(this, {
+      randomAmount: 0,
+      duration: 1,
+      ease: "elastic.out(15)",
+    });
+    this.randomAmountTimer.to(this, {
+      randomAmount: 1,
+      duration: 3,
+      ease: "expo.inOut()",
+    });
   }
 
   onResize() {

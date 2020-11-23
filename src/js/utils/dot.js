@@ -29,7 +29,7 @@ export default class Dot extends PIXI.Sprite {
       y: this.defaultP.y,
       duration: duration,
       delay: delay,
-      ease: "back.out(10)",
+      ease: "elastic.out(2)",
       onComplete: this.onGoHome.bind(this),
     });
   }
