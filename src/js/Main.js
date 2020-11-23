@@ -1,64 +1,62 @@
-import * as PIXI from 'pixi.js'
-import Vector2 from './utils/vector2'
+import * as PIXI from "pixi.js";
+import Vector2 from "./utils/vector2";
 
 export default class Main extends PIXI.Container {
+  constructor() {
+    super();
 
-    constructor() {
-        super()
+    this.sw = window.innerWidth;
+    this.sh = window.innerHeight;
 
-        this.sw = window.innerWidth
-        this.sh = window.innerHeight
+    this.mousePosition = new Vector2(0, 0);
+    this.lastMousePosition = new Vector2(0, 0);
+    this.mouseMoved = new Vector2(0, 0);
 
-        this.mousePosition = new Vector2(0, 0)
-        this.lastMousePosition = new Vector2(0, 0)
-        this.mouseMoved = new Vector2(0, 0)
+    this.transparent = new PIXI.Sprite();
+    this.transparent.width = this.sw;
+    this.transparent.height = this.sh;
+    this.transparent.alpha = 0;
+    this.addChild(this.transparent);
 
-        this.transparent = new PIXI.Sprite()
-        this.transparent.width = this.sw
-        this.transparent.height = this.sh
-        this.transparent.alpha = 0
-        this.width = this.sw
-        this.height = this.sh
-        this.x = 0
-        this.y = 0
+    this.width = this.sw;
+    this.height = this.sh;
+    this.x = 0;
+    this.y = 0;
+  }
 
+  setup() {
+    this.onSetup();
+  }
 
-    }
+  onSetup() {}
 
-    setup() {
-        this.onSetup()
-    }
+  update() {
+    this.mouseMoved.x = this.mousePosition.x - this.lastMousePosition.x;
+    this.mouseMoved.y = this.mousePosition.y - this.lastMousePosition.y;
 
-    onSetup() { }
+    this.lastMousePosition.x = this.mousePosition.x;
+    this.lastMousePosition.y = this.mousePosition.y;
 
-    update() {
-        this.mouseMoved.x = this.mousePosition.x - this.lastMousePosition.x
-        this.mouseMoved.y = this.mousePosition.y - this.lastMousePosition.y
+    this.onUpdate();
+  }
 
-        this.lastMousePosition.x = this.mousePosition.x
-        this.lastMousePosition.y = this.mousePosition.y
+  onUpdate() {}
 
-        this.onUpdate()
-    }
+  Resize(sw, sh) {
+    this.sw = sw;
+    this.sh = sh;
 
-    onUpdate() { }
+    this.onResize();
+  }
 
-    Resize(sw, sh) {
-        this.sw = sw
-        this.sh = sh
+  onResize() {}
 
-        this.onResize()
-    }
+  mousemove(e) {
+    this.mousePosition.x = e.offsetX;
+    this.mousePosition.y = e.offsetY;
 
-    onResize() { }
+    this.onMousemove();
+  }
 
-    mousemove(e) {
-        this.mousePosition.x = e.offsetX
-        this.mousePosition.y = e.offsetY
-
-        this.onMousemove()
-    }
-
-    onMousemove() { }
-
+  onMousemove() {}
 }

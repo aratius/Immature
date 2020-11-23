@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import Sample from "./sample";
 import Shooting from "./shooting";
 import DeadOrAlive from "./deadOrAlive";
+import Sapmple from "./sample";
 
 export default class App extends PIXI.Application {
   constructor() {

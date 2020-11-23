@@ -17,4 +17,8 @@ export default class ImgController extends PIXI.Sprite {
   onSetup() {}
 
   onUpdate() {}
+
+  onResize(sw, sh) {
+    this.position = this.defaultP = new Vector2(sw / 2, sh / 2);
+  }
 }

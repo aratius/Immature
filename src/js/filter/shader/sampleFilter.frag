@@ -12,7 +12,7 @@ void main(void) {
 
     vec2 pos = vScreenCoord;
     vec2 cord = vTextureCoord;
-
+    // cord.x += 0.3;
     vec4 color = texture2D(uSampler, cord);
 
     gl_FragColor = color;//色の反映

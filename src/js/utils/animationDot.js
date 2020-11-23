@@ -36,4 +36,15 @@ export default class AnimationDot extends Dot {
       onComplete: this.slide.bind(this),
     });
   }
+
+  rotation(sw, sh) {
+    let x, y;
+    if (this.radius && this.dist) {
+      this.radius += (0.01 * this.dist) / 300;
+      x = sw / 2 + Math.sin(this.radius) * this.dist;
+      y = sh / 2 + Math.cos(this.radius) * this.dist;
+      this.position.x = x;
+      this.position.y = y;
+    }
+  }
 }
