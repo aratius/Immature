@@ -12,11 +12,18 @@ export default class Main extends PIXI.Container {
     this.lastMousePosition = new Vector2(0, 0);
     this.mouseMoved = new Vector2(0, 0);
 
+    this.bgContainer = new PIXI.Container();
+    this.bgContainer.sortableChildren = true;
+    this.addChild(this.bgContainer);
+    this.mainContainer = new PIXI.Container();
+    this.addChild(this.mainContainer);
+
     this.transparent = new PIXI.Sprite();
     this.transparent.width = this.sw;
     this.transparent.height = this.sh;
     this.transparent.alpha = 0;
     this.addChild(this.transparent);
+    this.mainContainer.addChild(this.transparent);
 
     this.width = this.sw;
     this.height = this.sh;
@@ -45,6 +52,8 @@ export default class Main extends PIXI.Container {
   Resize(sw, sh) {
     this.sw = sw;
     this.sh = sh;
+    this.transparent.width = this.sw;
+    this.transparent.height = this.sh;
 
     this.onResize();
   }
