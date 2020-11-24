@@ -57,7 +57,7 @@ export default class DeadOrAlive extends Main {
     this.deadImg = new MainText(
       deadTex,
       new Vector2(this.sw / 2, this.sh / 2),
-      300 * 3,
+      300,
       0xeaeaea
     );
     this.deadImg.alpha = 0;
@@ -71,25 +71,6 @@ export default class DeadOrAlive extends Main {
         this.onClick();
       }.bind(this)
     );
-
-    this.BulgePinchFilter = new BulgePinchFilter();
-    this.BulgePinchFilter.radius = 300;
-    this.BulgePinchFilter.strength = 0;
-    this.mainContainer.filters = [this.BulgePinchFilter];
-
-    let dispTexure = new PIXI.Texture.from("./assets/img/noise.jpg");
-    let dispSprite = new PIXI.Sprite(dispTexure);
-    this.dispFilter = new PIXI.filters.DisplacementFilter(dispSprite);
-    this.dispFilter.scale.x = this.dispFilter.scale.y = 0;
-
-    this.dispFilterForText = new PIXI.filters.DisplacementFilter(dispSprite);
-    this.dispFilterForText.scale.x = this.dispFilterForText.scale.y = 0;
-
-    this.bgContainer.filters = [this.dispFilter];
-    this.mainContainer.filters = [
-      this.BulgePinchFilter,
-      this.dispFilterForText,
-    ];
   }
 
   dotInit() {
@@ -113,7 +94,7 @@ export default class DeadOrAlive extends Main {
         let dot = new AnimationDot(
           texture,
           new Vector2(x, y),
-          this.dotSize * ((dist / (this.sw / 2)) * 2 + 0.5),
+          this.dotSize * ((dist / (this.sw / 2)) * 2.5 + 0.2),
           0x871e00
         );
         dot.radius = r;
@@ -147,9 +128,11 @@ export default class DeadOrAlive extends Main {
     }
 
     //触り続けたら爆発
-    if (this.mouseAccumulate > 15000) {
+    if (this.mouseAccumulate > 20000 && mouseSpeed > 20) {
       this.mouseAccumulate = 0;
+
       this.DeadOrAliveFrag ? this.explode() : this.returnToNormal();
+      this.DeadOrAliveFrag = !this.DeadOrAliveFrag;
     }
 
     for (let i in this.mangaImgs) {
@@ -170,11 +153,11 @@ export default class DeadOrAlive extends Main {
     }
     this.BulgePinchFilter.strength *= 0.95;
     this.dispFilterForText.scale.x = this.dispFilterForText.scale.y *= 0.95;
+
+    this.dispSprite.rotation += 1;
   }
 
   explode() {
-    this.DeadOrAliveFrag = false;
-
     if (this.dispAmountTween) this.dispAmountTween.kill();
     this.dispAmountTween = gsap.to(this.dispFilter.scale, {
       x: 200,
@@ -230,7 +213,6 @@ export default class DeadOrAlive extends Main {
   }
 
   returnToNormal() {
-    this.DeadOrAliveFrag = true;
     if (this.dispAmountTween) this.dispAmountTween.kill();
     this.dispAmountTween = gsap.to(this.dispFilter.scale, {
       x: 0,
@@ -259,11 +241,10 @@ export default class DeadOrAlive extends Main {
   onClick() {
     if (this.randomAmountTimer) this.randomAmountTimer.kill();
     this.randomAmountTimer = gsap.timeline();
-
     this.randomAmountTimer.to(this, {
       randomAmount: 0,
       duration: 1,
-      ease: "elastic.out(15)",
+      ease: "elastic.out(5)",
     });
     this.randomAmountTimer.to(this, {
       randomAmount: 1,
@@ -288,12 +269,11 @@ export default class DeadOrAlive extends Main {
     );
     mangaImg.popUp(1, "elastic");
 
-    this.bgContainer.addChild(mangaImg);
+    this.mangaContainer.addChild(mangaImg);
     this.mangaImgs.push(mangaImg);
   }
 
   onResize() {
-    this.aliveImg.onResize(this.sw, this.sh);
     if (!this.DeadOrAliveFrag) this.drawBgBlack();
 
     this.aliveImg.position.x = this.sw / 2;
@@ -302,5 +282,29 @@ export default class DeadOrAlive extends Main {
     this.deadImg.position.y = this.sh / 2;
 
     this.dotInit();
+
+    this.BulgePinchFilter = new BulgePinchFilter();
+    this.BulgePinchFilter.radius = 300;
+    this.BulgePinchFilter.strength = 0;
+    this.mainContainer.filters = [this.BulgePinchFilter];
+
+    let dispTexure = new PIXI.Texture.from("./assets/img/noise.jpg");
+    this.dispSprite = new PIXI.Sprite(dispTexure);
+    this.dispFilter = new PIXI.filters.DisplacementFilter(this.dispSprite);
+    this.dispFilter.scale.x = this.dispFilter.scale.y = 0;
+
+    this.dispFilterForText = new PIXI.filters.DisplacementFilter(
+      this.dispSprite
+    );
+    this.dispFilterForText.scale.x = this.dispFilterForText.scale.y = 0;
+
+    this.bgContainer.filters = [this.dispFilter];
+    this.mainContainer.filters = [
+      this.BulgePinchFilter,
+      this.dispFilterForText,
+    ];
+
+    this.mangaContainer = new PIXI.Container();
+    this.bgContainer.addChild(this.mangaContainer);
   }
 }

@@ -48,7 +48,7 @@ export default class AnimationDot extends Dot {
   rotation(sw, sh, mv, randomAmount) {
     let x, y;
     if (this.radius && this.dist) {
-      this.radius += (0.01 * this.dist * (mv / 10 + 0.5)) / 300;
+      this.radius += (0.01 * this.dist * (mv / 10 + 0.5)) / 500;
       x = sw / 2 + Math.sin(this.radius) * this.dist;
       y = sh / 2 + Math.cos(this.radius) * this.dist;
       let random = this.random();
