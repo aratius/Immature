@@ -10,6 +10,7 @@ export default class ImgController extends PIXI.Sprite {
     this.position = position;
     this.defaultP = position;
     this.width = this.height = size;
+    this.defaultSize = size;
     this.tint = tint;
     this.anchor.set(0.5);
   }

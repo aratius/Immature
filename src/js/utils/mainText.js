@@ -19,10 +19,11 @@ export default class MangaImg extends ImgController {
   onResize(sw, sh) {}
 
   explode(duration, ease) {
+    this.width = this.height = this.defaultSize;
     if (this.explodeTween) this.explodeTween.kill();
     this.explodeTween = gsap.to(this, {
-      width: this.width * 3,
-      height: this.height * 3,
+      width: this.defaultSize * 3,
+      height: this.defaultSize * 3,
       duration: duration,
       ease: ease,
     });
@@ -35,10 +36,11 @@ export default class MangaImg extends ImgController {
   }
 
   appear(duration, ease) {
+    this.width = this.height = this.defaultSize * 3;
     if (this.explodeTween) this.explodeTween.kill();
     this.explodeTween = gsap.to(this, {
-      width: this.width / 3,
-      height: this.height / 3,
+      width: this.defaultSize,
+      height: this.defaultSize,
       duration: duration,
       ease: ease,
       delay: 0,
