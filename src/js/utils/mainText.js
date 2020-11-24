@@ -30,7 +30,7 @@ export default class MangaImg extends ImgController {
     this.alphaTween = gsap.to(this, {
       alpha: 0,
       duration: duration,
-      ease: "expo.in",
+      ease: "expo.out",
     });
   }
 
@@ -41,14 +41,14 @@ export default class MangaImg extends ImgController {
       height: this.height / 3,
       duration: duration,
       ease: ease,
-      delay: duration / 2,
+      delay: 0,
     });
     if (this.alphaTween) this.alphaTween.kill();
     this.alphaTween = gsap.to(this, {
       alpha: 1,
       duration: duration,
-      ease: "expo.in",
-      delay: duration / 2,
+      ease: "expo.out",
+      delay: 0,
     });
   }
 }

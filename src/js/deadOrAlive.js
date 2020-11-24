@@ -58,7 +58,7 @@ export default class DeadOrAlive extends Main {
       deadTex,
       new Vector2(this.sw / 2, this.sh / 2),
       300 * 3,
-      0xffffff
+      0xeaeaea
     );
     this.deadImg.alpha = 0;
     this.mainContainer.addChild(this.deadImg);
@@ -99,7 +99,7 @@ export default class DeadOrAlive extends Main {
         let dot = new AnimationDot(
           texture,
           new Vector2(x, y),
-          this.dotSize * (dist / (this.sw / 2) + 1),
+          this.dotSize * ((dist / (this.sw / 2)) * 2 + 0.5),
           0x871e00
         );
         dot.radius = r;
@@ -119,7 +119,7 @@ export default class DeadOrAlive extends Main {
     );
     mouseSpeed /= 5;
     this.mouseSpeed += mouseSpeed;
-    this.mouseAccumulate += mouseSpeed;
+    this.mouseAccumulate += Math.pow(mouseSpeed, 2);
     this.mouseSpeed *= 0.9; //ちょっとずつ0に戻る
     if (!this.isSpecialAnimation) {
       for (let i in this.dots) {
@@ -133,7 +133,7 @@ export default class DeadOrAlive extends Main {
     }
 
     //触り続けたら爆発
-    if (this.mouseAccumulate > 1500) {
+    if (this.mouseAccumulate > 15000) {
       this.mouseAccumulate = 0;
       this.DeadOrAliveFrag ? this.explode() : this.returnToNormal();
     }
@@ -146,7 +146,7 @@ export default class DeadOrAlive extends Main {
     }
 
     this.BulgePinchFilter.strength =
-      (this.mouseSpeed / 200) * this.randomAmount;
+      (this.mouseSpeed / 130) * this.randomAmount;
   }
 
   explode() {
@@ -215,7 +215,7 @@ export default class DeadOrAlive extends Main {
     this.bgBlackTween = gsap.to(this.bgBlack, {
       alpha: 1,
       duration: 1,
-      ease: "expo.in",
+      ease: "expo.out",
     });
   }
 
@@ -269,7 +269,7 @@ export default class DeadOrAlive extends Main {
     let i = Math.ceil(Math.random() * 4);
     let mangaTexture = `./assets/img/manga/manga${i}.png`;
     let texture = new PIXI.Texture.from(mangaTexture);
-    let tint = this.DeadOrAliveFrag ? 0x000000 : 0xffffff;
+    let tint = this.DeadOrAliveFrag ? 0x000000 : 0xeaeaea;
     let mangaImg = new MangaImg(
       texture,
       new Vector2(this.sw / 2, this.sh / 2),
@@ -285,6 +285,11 @@ export default class DeadOrAlive extends Main {
   onResize() {
     this.aliveImg.onResize(this.sw, this.sh);
     if (!this.DeadOrAliveFrag) this.drawBgBlack();
+
+    this.aliveImg.position.x = this.sw / 2;
+    this.aliveImg.position.y = this.sh / 2;
+    this.deadImg.position.x = this.sw / 2;
+    this.deadImg.position.y = this.sh / 2;
 
     this.dotInit();
   }
