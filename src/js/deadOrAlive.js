@@ -76,6 +76,20 @@ export default class DeadOrAlive extends Main {
     this.BulgePinchFilter.radius = 300;
     this.BulgePinchFilter.strength = 0;
     this.mainContainer.filters = [this.BulgePinchFilter];
+
+    let dispTexure = new PIXI.Texture.from("./assets/img/noise.jpg");
+    let dispSprite = new PIXI.Sprite(dispTexure);
+    this.dispFilter = new PIXI.filters.DisplacementFilter(dispSprite);
+    this.dispFilter.scale.x = this.dispFilter.scale.y = 0;
+
+    this.dispFilterForText = new PIXI.filters.DisplacementFilter(dispSprite);
+    this.dispFilterForText.scale.x = this.dispFilterForText.scale.y = 0;
+
+    this.bgContainer.filters = [this.dispFilter];
+    this.mainContainer.filters = [
+      this.BulgePinchFilter,
+      this.dispFilterForText,
+    ];
   }
 
   dotInit() {
@@ -145,25 +159,21 @@ export default class DeadOrAlive extends Main {
       }
     }
 
-    this.BulgePinchFilter.strength =
-      (this.mouseSpeed / 130) * this.randomAmount;
+    if (this.DeadOrAliveFrag) {
+      this.BulgePinchFilter.strength =
+        (this.mouseSpeed / 130) * this.randomAmount;
+    } else {
+      this.dispFilterForText.scale.x = this.dispFilterForText.scale.y =
+        this.mouseSpeed * 3 * this.randomAmount;
+      this.BulgePinchFilter.strength =
+        (this.mouseSpeed / 130) * this.randomAmount;
+    }
+    this.BulgePinchFilter.strength *= 0.95;
+    this.dispFilterForText.scale.x = this.dispFilterForText.scale.y *= 0.95;
   }
 
   explode() {
     this.DeadOrAliveFrag = false;
-    let dispTexure = new PIXI.Texture.from("./assets/img/noise.jpg");
-    let dispSprite = new PIXI.Sprite(dispTexure);
-    this.dispFilter = new PIXI.filters.DisplacementFilter(dispSprite);
-    this.dispFilter.scale.x = this.dispFilter.scale.y = 0;
-
-    this.dispFilterForText = new PIXI.filters.DisplacementFilter(dispSprite);
-    this.dispFilterForText.scale.x = this.dispFilterForText.scale.y = 0;
-
-    this.bgContainer.filters = [this.dispFilter];
-    this.mainContainer.filters = [
-      this.BulgePinchFilter,
-      this.dispFilterForText,
-    ];
 
     if (this.dispAmountTween) this.dispAmountTween.kill();
     this.dispAmountTween = gsap.to(this.dispFilter.scale, {
