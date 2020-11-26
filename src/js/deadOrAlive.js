@@ -65,12 +65,42 @@ export default class DeadOrAlive extends Main {
   }
 
   onSetup() {
-    window.addEventListener(
-      "click",
-      function () {
-        this.onClick();
-      }.bind(this)
+
+    this.BulgePinchFilter = new BulgePinchFilter();
+    this.BulgePinchFilter.radius = 300;
+    this.BulgePinchFilter.strength = 0;
+    this.mainContainer.filters = [this.BulgePinchFilter];
+
+    let dispTexure = new PIXI.Texture.from("./assets/img/noise.jpg");
+    this.dispSprite = new PIXI.Sprite(dispTexure);
+    this.dispFilter = new PIXI.filters.DisplacementFilter(this.dispSprite);
+    this.dispFilter.scale.x = this.dispFilter.scale.y = 0;
+
+    this.dispFilterForText = new PIXI.filters.DisplacementFilter(
+      this.dispSprite
     );
+    this.dispFilterForText.scale.x = this.dispFilterForText.scale.y = 0;
+
+    this.bgContainer.filters = [this.dispFilter];
+    this.mainContainer.filters = [
+      this.BulgePinchFilter,
+      this.dispFilterForText,
+    ];
+
+    this.mangaContainer = new PIXI.Container();
+  }
+
+  onResize() {
+    if (!this.DeadOrAliveFrag) this.drawBgBlack();
+
+    this.aliveImg.position.x = this.sw / 2;
+    this.aliveImg.position.y = this.sh / 2;
+    this.deadImg.position.x = this.sw / 2;
+    this.deadImg.position.y = this.sh / 2;
+
+    this.dotInit();
+    this.bgContainer.addChild(this.mangaContainer);
+    
   }
 
   dotInit() {
@@ -87,6 +117,7 @@ export default class DeadOrAlive extends Main {
     let dotNum = 0;
     for (let i = 0; i < loopCount; i++) {
       let dist = this.dotSpace * i; //原点からの距離
+      let dotSize = this.isTouchDevice ? this.dotSize * 0.7 : this.dotSize;
       for (let j = 0; j < dotNum; j++) {
         let r = (Math.PI * 2 * j) / dotNum + dotNum; //角度
         let x = this.sw / 2 + Math.sin(r) * dist; //極座標
@@ -94,12 +125,13 @@ export default class DeadOrAlive extends Main {
         let dot = new AnimationDot(
           texture,
           new Vector2(x, y),
-          this.dotSize * ((dist / (this.sw / 2)) * 2.5 + 0.2),
+          dotSize * ((dist / (this.sw / 2)) * 2.5 + 0.2),
           0x871e00
         );
         dot.radius = r;
         dot.dist = dist;
-        if (dist < 200) dot.alpha = 0;
+        let minDist = this.isTouchDevice ? 150 : 200;
+        if (dist < minDist) dot.alpha = 0;
         this.dots.push(dot);
         this.bgContainer.addChild(dot);
       }
@@ -114,21 +146,32 @@ export default class DeadOrAlive extends Main {
     );
     mouseSpeed /= 5;
     this.mouseSpeed += mouseSpeed;
-    this.mouseAccumulate += Math.pow(mouseSpeed, 2);
     this.mouseSpeed *= 0.9; //ちょっとずつ0に戻る
+    this.mouseAccumulate += mouseSpeed;
+    // this.mouseAccumulate *= 0.99
     if (!this.isSpecialAnimation) {
       for (let i in this.dots) {
+        let mouseDist = Math.sqrt(Math.pow(this.mousePosition.x-this.dots[i].position.x, 2) + Math.pow(this.mousePosition.y - this.dots[i].position.y, 2))
+        mouseDist = 300 - mouseDist
+        mouseDist /= 20
+        mouseDist = mouseDist >= 1?mouseDist:1
+        let direction = Math.atan2(this.mousePosition.x-this.dots[i].position.x, this.mousePosition.y - this.dots[i].position.y)
         this.dots[i].rotation(
           this.sw,
           this.sh,
           this.mouseSpeed,
-          this.randomAmount
+          this.randomAmount,
+          mouseDist,
+          direction
         );
       }
     }
 
+    this.TextVibe();
+
     //触り続けたら爆発
-    if (this.mouseAccumulate > 20000 && mouseSpeed > 20) {
+    let threshold = this.isTouchDevice ? 1000 : 1000;
+    if (this.mouseAccumulate > threshold && mouseSpeed > 10) {
       this.mouseAccumulate = 0;
 
       this.DeadOrAliveFrag ? this.explode() : this.returnToNormal();
@@ -155,6 +198,21 @@ export default class DeadOrAlive extends Main {
     this.dispFilterForText.scale.x = this.dispFilterForText.scale.y *= 0.95;
 
     this.dispSprite.rotation += 1;
+  }
+
+  TextVibe() {
+    let threshold = this.isTouchDevice ? 1000 : 3000;
+    let amount = this.mouseAccumulate / threshold;
+    let range = 30;
+    amount = amount < 0.2 ? 0 : amount;
+    this.aliveImg.position.x =
+      this.sw / 2 + (Math.random() - 0.5) * range * amount;
+    this.aliveImg.position.y =
+      this.sh / 2 + (Math.random() - 0.5) * range * amount;
+    this.deadImg.position.x =
+      this.sw / 2 + (Math.random() - 0.5) * range * amount;
+    this.deadImg.position.y =
+      this.sh / 2 + (Math.random() - 0.5) * range * amount;
   }
 
   explode() {
@@ -244,7 +302,7 @@ export default class DeadOrAlive extends Main {
     this.randomAmountTimer.to(this, {
       randomAmount: 0,
       duration: 1,
-      ease: "elastic.out(5)",
+      ease: "elastic.out(8)",
     });
     this.randomAmountTimer.to(this, {
       randomAmount: 1,
@@ -273,38 +331,5 @@ export default class DeadOrAlive extends Main {
     this.mangaImgs.push(mangaImg);
   }
 
-  onResize() {
-    if (!this.DeadOrAliveFrag) this.drawBgBlack();
-
-    this.aliveImg.position.x = this.sw / 2;
-    this.aliveImg.position.y = this.sh / 2;
-    this.deadImg.position.x = this.sw / 2;
-    this.deadImg.position.y = this.sh / 2;
-
-    this.dotInit();
-
-    this.BulgePinchFilter = new BulgePinchFilter();
-    this.BulgePinchFilter.radius = 300;
-    this.BulgePinchFilter.strength = 0;
-    this.mainContainer.filters = [this.BulgePinchFilter];
-
-    let dispTexure = new PIXI.Texture.from("./assets/img/noise.jpg");
-    this.dispSprite = new PIXI.Sprite(dispTexure);
-    this.dispFilter = new PIXI.filters.DisplacementFilter(this.dispSprite);
-    this.dispFilter.scale.x = this.dispFilter.scale.y = 0;
-
-    this.dispFilterForText = new PIXI.filters.DisplacementFilter(
-      this.dispSprite
-    );
-    this.dispFilterForText.scale.x = this.dispFilterForText.scale.y = 0;
-
-    this.bgContainer.filters = [this.dispFilter];
-    this.mainContainer.filters = [
-      this.BulgePinchFilter,
-      this.dispFilterForText,
-    ];
-
-    this.mangaContainer = new PIXI.Container();
-    this.bgContainer.addChild(this.mangaContainer);
-  }
+  
 }

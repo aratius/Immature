@@ -45,17 +45,17 @@ export default class AnimationDot extends Dot {
     });
   }
 
-  rotation(sw, sh, mv, randomAmount) {
+  rotation(sw, sh, mv, randomAmount, mouseDist, direction) {
     let x, y;
     if (this.radius && this.dist) {
       this.radius += (0.01 * this.dist * (mv / 10 + 0.5)) / 500;
       x = sw / 2 + Math.sin(this.radius) * this.dist;
       y = sh / 2 + Math.cos(this.radius) * this.dist;
       let random = this.random();
-      let offsetX = random.x * (mv / 20 + 0.5) * 4;
-      let offsetY = random.y * (mv / 20 + 0.5) * 4;
-      this.position.x = x + offsetX * randomAmount;
-      this.position.y = y + offsetY * randomAmount;
+      let offsetX = random.x * (mv / 20 + 0.5) * 1;
+      let offsetY = random.y * (mv / 20 + 0.5) * 1;
+      this.position.x = x + offsetX * randomAmount * mouseDist;
+      this.position.y = y + offsetY * randomAmount * mouseDist;
     }
   }
 

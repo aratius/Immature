@@ -1,16 +1,40 @@
 // entry point
 import App from './js/App'
 
-const body = document.querySelector('#app')
-const app = new App()
-body.appendChild(app.view)
+let body, app
 
-window.addEventListener('mousemove', function (e) {
-    app._mousemove(e)
-})
-window.addEventListener('resize', function () {
-    app._resize()
-})
+function init() {
+    body = document.querySelector('#app')
+    app = new App()
+    body.appendChild(app.view)
+    
+    window.addEventListener('mousemove', function (e) {
+        app._mousemove(e)
+    })
+    
+    window.addEventListener('click', function(e) {
+        app._click(e)
+    })
+
+    window.addEventListener('touchstart', function(e) {
+        app._touchstart(e)
+    })
+
+    window.addEventListener('touchmove', function(e) {
+        app._touchmove(e)
+    })
+    
+    window.addEventListener('touchend', function(e) {
+        app._touchend(e)
+    })
+
+    window.addEventListener('resize', function () {
+        app._resize()
+    })
+
+}
+init()
+
 app._setup()
 app._resize()
 
@@ -19,4 +43,3 @@ function animate() {
     app._update()
 }
 animate()
-

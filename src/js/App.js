@@ -3,6 +3,7 @@ import Sample from "./sample";
 import Shooting from "./shooting";
 import DeadOrAlive from "./deadOrAlive";
 import Sapmple from "./sample";
+import Intro from "./intro";
 
 export default class App extends PIXI.Application {
   constructor() {
@@ -19,6 +20,12 @@ export default class App extends PIXI.Application {
     this.game = new DeadOrAlive();
     this.game.setup();
     this.stage.addChild(this.game);
+
+    if(!document.location.host.match(/localhost/)){
+      this.intro = new Intro()
+      this.intro.setup()
+      this.stage.addChild(this.intro)
+    }
   }
 
   _update() {
@@ -27,6 +34,23 @@ export default class App extends PIXI.Application {
 
   _mousemove(e) {
     this.game.mousemove(e);
+  }
+
+  _click(e) {
+    this.game.click(e)
+    
+  }
+
+  _touchstart(e) {
+    this.game.touchstart(e)
+  }
+
+  _touchmove(e) {
+    this.game.touchmove(e)
+  }
+
+  _touchend(e) {
+    this.game.touchend(e)
   }
 
   _resize() {
@@ -39,7 +63,8 @@ export default class App extends PIXI.Application {
           window.innerHeight;
 
         //call main resize
-        this.game.Resize(window.innerWidth, window.innerHeight);
+        this.game.resize(window.innerWidth, window.innerHeight);
+        this.intro.resize(window.innerWidth, window.innerHeight)
       }.bind(this),
       200
     );

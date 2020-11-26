@@ -29,9 +29,18 @@ export default class Main extends PIXI.Container {
     this.height = this.sh;
     this.x = 0;
     this.y = 0;
+
+    this.touchstartTime = 0
+    this.touchendTime = 0
+
+    this.isTouchDevice = false
   }
 
   setup() {
+    if (navigator.userAgent.match(/iPhone|Android.+Mobile/)) {
+      this.isTouchDevice = true
+    }
+
     this.onSetup();
   }
 
@@ -49,7 +58,7 @@ export default class Main extends PIXI.Container {
 
   onUpdate() {}
 
-  Resize(sw, sh) {
+  resize(sw, sh) {
     this.sw = sw;
     this.sh = sh;
     this.transparent.width = this.sw;
@@ -68,4 +77,43 @@ export default class Main extends PIXI.Container {
   }
 
   onMousemove() {}
+
+  click(e) {
+    this.onClick()
+    
+  }
+
+  onClick(){}
+
+  touchstart(e) {
+    this.mousePosition.x = e.changedTouches[0].pageX;
+    this.mousePosition.y = e.changedTouches[0].pageY;
+    this.touchstartTime = new Date().getTime()
+
+    this.onTouchstart()
+  }
+
+  onTouchstart(){}
+
+  touchmove(e) {
+    this.mousePosition.x = e.changedTouches[0].pageX;
+    this.mousePosition.y = e.changedTouches[0].pageY;
+
+    this.onTouchmove()
+  }
+
+  onTouchmove(){}
+
+  touchend(e) {
+    this.mousePosition.x = -99
+    this.mousePosition.y = -99
+    this.touchendTime = new Date().getTime()
+    let tapTime = this.touchendTime - this.touchstartTime
+    if(tapTime < 1000) this.click(e)
+
+    this.onTouchend()
+  }
+
+  onTouchend(){}
+
 }
