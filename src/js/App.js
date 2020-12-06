@@ -3,6 +3,7 @@ import Sample from "./sample";
 import Shooting from "./shooting";
 import DeadOrAlive from "./deadOrAlive";
 import Sapmple from "./sample";
+import Text from "./text";
 import Intro from "./intro";
 
 export default class App extends PIXI.Application {
@@ -17,7 +18,7 @@ export default class App extends PIXI.Application {
   }
 
   _setup() {
-    this.game = new DeadOrAlive();
+    this.game = new Text();
     this.game.setup();
     this.stage.addChild(this.game);
 
