@@ -21,4 +21,12 @@ gulp.task('default', gulp.series(
     'bundle',
   ),
   'watch'
-  ))
+))
+
+gulp.task('build', gulp.series(
+  gulp.parallel(
+    'img',
+    'html',
+    'bundle',
+  ),
+))
