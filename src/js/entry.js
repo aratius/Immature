@@ -1,5 +1,5 @@
 // entry point
-import App from './js/App'
+import App from './App'
 
 let body, app
 

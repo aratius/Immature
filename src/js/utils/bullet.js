@@ -14,7 +14,7 @@ export default class Bullet extends PIXI.Sprite {
         this.tint = tint
         this.anchor.set(0.5)
 
-        this.speed = 3
+        this.speed = 4
     }
 
     onSetup() {

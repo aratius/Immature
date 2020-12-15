@@ -6,7 +6,7 @@ module.exports = {
   //モードの設定
   mode: "development",
   //エントリーポイントの指定
-  entry: "./src/index.js",
+  entry: "./src/js/entry.js",
   //出力の設定
   output: {
     //出力するファイル名

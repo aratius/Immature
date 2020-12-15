@@ -18,10 +18,11 @@ export default class App extends PIXI.Application {
   }
 
   _setup() {
-    this.game = new Text();
+    this.game = new DeadOrAlive();
     this.game.setup();
     this.stage.addChild(this.game);
 
+    //開発用イントロ回避
     if(!document.location.host.match(/localhost/)){
       this.intro = new Intro()
       this.intro.setup()

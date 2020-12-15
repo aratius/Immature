@@ -24,6 +24,12 @@ export default class Text extends Main {
             this.userTexts.getData()
             this.checkUserTexts()
         }.bind(this),1000)
+
+        window.addEventListener('click', ()=> {
+            for(let i in this.texts) {
+                this.texts[i].goHome(1, )
+            }
+        })
     }
 
     checkUserTexts() {
@@ -45,15 +51,19 @@ export default class Text extends Main {
     }
 
     initText(text) {
-        let detail = {fontFamily: "Arial", fontSize: 100, fill: 0x000000, align: "center"}
-        let textSprite = new TextController(text, detail, new Vector2(Math.random()*this.sw, 0), 0.5)
-        this.addChild(textSprite)
-        this.texts.push(textSprite)
+        let arrayText = text.split('')
+        let y = Math.random()*this.sh
+        for(let i in arrayText) {
+            let detail = {fontFamily: "Arial", fontSize: 100, fill: 0x000000, align: "center"}
+            let textSprite = new TextController(arrayText[i], detail, new Vector2(i*50+50, y), 0.5)
+            this.addChild(textSprite)
+            this.texts.push(textSprite)
+        }
     }
 
     onUpdate() {
         for(let i in this.texts) {
-            this.texts[i].onUpdate(this.sh)
+            this.texts[i].onUpdate(this.sw, this.sh, this.mousePosition, this.mouseMoved)
         }
 
     }
