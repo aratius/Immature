@@ -7,11 +7,11 @@ $ npm install
 $ gulp
 ```
 
-## 使用言語
-- JavaScript
-- GLSL
-
 ## 主な使用ライブラリ
 - PIXIJS
 - GSAP
-- 
+
+## モーションプランニング課題
+### 使用ファイル
+- `src/js/deadOrAlive.js`
+- その他多数
